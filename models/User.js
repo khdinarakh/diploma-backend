@@ -1,4 +1,22 @@
 import mongoose from "mongoose";
+import { generateActivationCode } from "../utils/utils.js";
+import { UserRoles } from "../utils/enums.js";
+
+const ActivationCodeSchema = mongoose.Schema(
+  {
+    code: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 6
+    },
+    expiresIn: {
+      type: Number,
+      required: true
+    }
+  },
+  { _id: false, timestamps: false }
+);
 
 const UserSchema = mongoose.Schema({
   firstName: {
@@ -21,6 +39,22 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
     trim: true
+  },
+  role: {
+    type: String,
+    enum: Object.values(UserRoles),
+    required: true,
+    default: UserRoles.USER
+  },
+  isActivated: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  activationCode: {
+    type: ActivationCodeSchema,
+    required: true,
+    default: generateActivationCode()
   }
 });
 
