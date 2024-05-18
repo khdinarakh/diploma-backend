@@ -30,6 +30,25 @@ const UserSchema = mongoose.Schema({
     required: true,
     default: UserRoles.USER
   },
+  universityName: {
+    type: String,
+    required: false,
+    trim: true
+  },
+  year: {
+    type: Number,
+    required: false,
+    trim: true
+  },
+  dateOfBirth: {
+    type: Date,
+    required: false
+  },
+  location: {
+    type: String,
+    required: false,
+    trim: true
+  },
   isActivated: {
     type: Boolean,
     required: true,

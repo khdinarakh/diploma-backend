@@ -12,3 +12,18 @@ export const getMe = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const fillUserDetails = async (req, res) => {
+  try {
+    const { universityName, year, dateOfBirth, location } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.userId,
+      { $set: { universityName, year, dateOfBirth, location } },
+      { new: true }
+    );
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

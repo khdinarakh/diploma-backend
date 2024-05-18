@@ -52,16 +52,16 @@ export const activate = async (req, res) => {
   try {
     const { code } = req.body;
     const user = await User.findOne({ activationCode: code });
-
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      { $set: { isActivated: true }, $unset: { activationCode: 1 } },
+      { new: true }
+    );
     if (!user) {
       res.status(400).json({ message: "Activation code is not correct" });
     }
 
-    user.isActivated = true;
-    user.activationCode = undefined;
-    await user.save();
-
-    res.json(user);
+    res.json(updatedUser);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
