@@ -80,6 +80,9 @@ export const updateDorm = async (req, res) => {
       },
       { new: true }
     );
+    if (!dorm) {
+      return res.status(404).json({ message: "Dorm not found" });
+    }
 
     res.json(dorm);
   } catch (error) {

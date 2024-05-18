@@ -9,6 +9,7 @@ import {
 } from "../controllers/dorm.controller.js";
 import { authUser, checkIsAdmin } from "../middlewares/auth.middleware.js";
 import { upload } from "../services/google-file-storage.js";
+import { updateDormValidator } from "../validators/dorm.validator.js";
 
 const router = Router();
 
@@ -19,7 +20,7 @@ router.post(
   upload.fields([{ name: "preview", maxCount: 1 }, { name: "images" }]),
   createDorm
 );
-router.patch("/:id", authUser, checkIsAdmin, updateDorm);
+router.patch("/:id", authUser, checkIsAdmin, updateDormValidator, updateDorm);
 router.delete("/:id", authUser, checkIsAdmin, deleteDorm);
 router.get("/", getAllDorms);
 router.get("/:id", getDormById);
