@@ -14,14 +14,11 @@ const password = new CustomBodyValidator("password")
     "Пароль должен быть не менее 8 символов и содержать как минимум одну заглавную букву, одну строчную букву, одну цифру и один специальный символ"
   )
   .getValidator();
-const universityName = new CustomBodyValidator("lastName").string().length().getValidator();
-const year = new CustomBodyValidator("lastName").number().getValidator();
-const dateOfBirth = new CustomBodyValidator("lastName").string().length().getValidator();
-const location = new CustomBodyValidator("lastName").string().length().getValidator();
-const activationCode = new CustomBodyValidator("activationCode")
-  .string()
-  .length(6, 6)
-  .getValidator();
+const universityName = new CustomBodyValidator("universityName").string().length().getValidator();
+const year = new CustomBodyValidator("year").number().getValidator();
+const dateOfBirth = new CustomBodyValidator("dateOfBirth").string().length().getValidator();
+const location = new CustomBodyValidator("location").string().length().getValidator();
+const code = new CustomBodyValidator("code").string().length(6, 6).getValidator();
 
 export const registerValidator = createValidatorMiddleware([firstName, lastName, email, password]);
 export const loginValidator = createValidatorMiddleware([email, password]);
@@ -40,4 +37,4 @@ export const updateUserValidator = createValidatorMiddleware([
   dateOfBirth,
   location
 ]);
-export const activateUserValidator = createValidatorMiddleware([activationCode]);
+export const activateUserValidator = createValidatorMiddleware([code]);

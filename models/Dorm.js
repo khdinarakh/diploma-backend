@@ -66,6 +66,12 @@ const DormSchema = new mongoose.Schema(
     imageUrls: {
       type: [String],
       required: true
+    },
+    reviews: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Review",
+      required: true,
+      default: []
     }
   },
   { timestamps: true }

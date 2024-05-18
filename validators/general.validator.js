@@ -67,5 +67,5 @@ export class CustomParamValidator {
   }
 }
 
-const id = new CustomParamValidator("id").getValidator();
+export const id = new CustomParamValidator("id").getValidator();
 export const checkIdParamValidator = createValidatorMiddleware([id]);

@@ -4,7 +4,7 @@ import {
   deleteDorm,
   getAllDorms,
   getComparedDorms,
-  getDormById,
+  getDormBySlug,
   updateDorm
 } from "../controllers/dorm.controller.js";
 import { authUser, checkIsAdmin } from "../middlewares/auth.middleware.js";
@@ -23,7 +23,7 @@ router.post(
 router.patch("/:id", authUser, checkIsAdmin, updateDormValidator, updateDorm);
 router.delete("/:id", authUser, checkIsAdmin, deleteDorm);
 router.get("/", getAllDorms);
-router.get("/:id", getDormById);
+router.get("/:slug", getDormBySlug);
 router.post("/compare", getComparedDorms);
 
 export default router;

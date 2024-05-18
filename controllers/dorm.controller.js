@@ -117,15 +117,38 @@ export const getAllDorms = async (req, res) => {
   }
 };
 
-export const getDormById = async (req, res) => {
+export const getDormBySlug = async (req, res) => {
   try {
-    const { id } = req.params;
-    const dorm = await Dorm.findById(id);
+    const { slug } = req.params;
+    const dorm = await Dorm.findOne({ slug }).populate({
+      path: "reviews",
+      populate: { path: "userId" }
+    });
     if (!dorm) {
       return res.status(404).json({ message: "Dorm not found" });
     }
 
-    res.json(dorm);
+    const overallRate = {
+      room: 0,
+      location: 0,
+      building: 0,
+      bathroom: 0
+    };
+
+    if (dorm.reviews.length > 0) {
+      const totalReviews = dorm.reviews.length;
+
+      overallRate.room =
+        dorm.reviews.reduce((acc, review) => acc + review.rate.room, 0) / totalReviews;
+      overallRate.location =
+        dorm.reviews.reduce((acc, review) => acc + review.rate.location, 0) / totalReviews;
+      overallRate.building =
+        dorm.reviews.reduce((acc, review) => acc + review.rate.building, 0) / totalReviews;
+      overallRate.bathroom =
+        dorm.reviews.reduce((acc, review) => acc + review.rate.bathroom, 0) / totalReviews;
+    }
+
+    res.json({ ...dorm.toObject(), overallRate });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
