@@ -39,10 +39,29 @@ export const login = async (req, res) => {
       res.status(404).json({ message: "Incorrect email or password" });
     }
 
-    const payload = { id: user._id, role: user.role };
-    const token = await createToken(payload);
+    const payload = { id: user._id, role: user.role, isActivated: user.isActivated };
+    const token = createToken(payload);
 
     res.json({ user, token });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const activate = async (req, res) => {
+  try {
+    const { code } = req.body;
+    const user = await User.findOne({ activationCode: code });
+
+    if (!user) {
+      res.status(400).json({ message: "Activation code is not correct" });
+    }
+
+    user.isActivated = true;
+    user.activationCode = undefined;
+    await user.save();
+
+    res.json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
