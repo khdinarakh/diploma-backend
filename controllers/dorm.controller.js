@@ -106,7 +106,61 @@ export const deleteDorm = async (req, res) => {
 
 export const getAllDorms = async (req, res) => {
   try {
-    const dorms = await Dorm.find();
+    const dorms = await Dorm.aggregate([
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "reviews",
+          foreignField: "_id",
+          as: "reviews"
+        }
+      },
+      {
+        $addFields: {
+          overallRate: {
+            $cond: {
+              if: { $gt: [{ $size: "$reviews" }, 0] },
+              then: {
+                $avg: {
+                  $map: {
+                    input: "$reviews",
+                    as: "review",
+                    in: {
+                      $avg: [
+                        "$$review.rate.room",
+                        "$$review.rate.location",
+                        "$$review.rate.building",
+                        "$$review.rate.bathroom"
+                      ]
+                    }
+                  }
+                }
+              },
+              else: null
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          name: 1,
+          slug: 1,
+          workEmail: 1,
+          phoneNumber: 1,
+          description: 1,
+          price: 1,
+          size: 1,
+          capacity: 1,
+          location: 1,
+          extras: 1,
+          hasWiFi: 1,
+          hasMeal: 1,
+          previewImageUrl: 1,
+          imageUrls: 1,
+          overallRate: 1
+        }
+      }
+    ]);
     if (!dorms) {
       return res.status(404).json({ message: "Dorms not found" });
     }
@@ -129,6 +183,7 @@ export const getDormBySlug = async (req, res) => {
     }
 
     const overallRate = {
+      overall: 0,
       room: 0,
       location: 0,
       building: 0,
@@ -146,6 +201,8 @@ export const getDormBySlug = async (req, res) => {
         dorm.reviews.reduce((acc, review) => acc + review.rate.building, 0) / totalReviews;
       overallRate.bathroom =
         dorm.reviews.reduce((acc, review) => acc + review.rate.bathroom, 0) / totalReviews;
+      overallRate.overall =
+        (overallRate.room + overallRate.location + overallRate.building + overallRate.bathroom) / 4;
     }
 
     res.json({ ...dorm.toObject(), overallRate });

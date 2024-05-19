@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import { hashPassword, isValidPassword } from "../services/bcrypt.js";
 import { createToken } from "../services/jwt.js";
+import { sendActivationCode } from "../services/nodemailer.js";
 
 export const register = async (req, res) => {
   try {
@@ -18,6 +19,8 @@ export const register = async (req, res) => {
       email,
       password: hashedPassword
     }).save();
+
+    await sendActivationCode(user.activationCode, user.email);
 
     res.status(201).json(user);
   } catch (error) {
@@ -52,14 +55,15 @@ export const activate = async (req, res) => {
   try {
     const { code } = req.body;
     const user = await User.findOne({ activationCode: code });
+    if (!user) {
+      res.status(400).json({ message: "Activation code is not correct" });
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       user._id,
       { $set: { isActivated: true }, $unset: { activationCode: 1 } },
       { new: true }
     );
-    if (!user) {
-      res.status(400).json({ message: "Activation code is not correct" });
-    }
 
     res.json(updatedUser);
   } catch (error) {
