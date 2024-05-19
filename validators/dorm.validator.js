@@ -10,18 +10,6 @@ const size = new CustomBodyValidator("size").number().getValidator();
 const capacity = new CustomBodyValidator("capacity").number().getValidator();
 const location = new CustomBodyValidator("location").string().length().getValidator();
 
-export const createDormValidator = createValidatorMiddleware([
-  slug,
-  name,
-  workEmail,
-  phoneNumber,
-  description,
-  price,
-  size,
-  capacity,
-  location
-]);
-
 export const updateDormValidator = createValidatorMiddleware([
   slug,
   name,

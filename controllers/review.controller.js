@@ -37,6 +37,8 @@ export const deleteReview = async (req, res) => {
       return res.status(404).json({ message: "Review not found" });
     }
 
+    await Dorm.updateOne({ reviews: id }, { $pull: { reviews: id } });
+
     res.json({ message: "Review successfully deleted" });
   } catch (error) {
     res.status(500).json({ message: error.message });

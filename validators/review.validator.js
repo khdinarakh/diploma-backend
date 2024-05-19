@@ -7,6 +7,7 @@ const building = new CustomBodyValidator("rate.building").number().getValidator(
 const bathroom = new CustomBodyValidator("rate.bathroom").number().getValidator();
 
 export const createReviewValidator = createValidatorMiddleware([
+  id,
   comment,
   room,
   location,

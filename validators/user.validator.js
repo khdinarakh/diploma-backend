@@ -1,4 +1,4 @@
-import { CustomBodyValidator, createValidatorMiddleware } from "./general.validator.js";
+import { CustomBodyValidator, createValidatorMiddleware, id } from "./general.validator.js";
 import "dotenv/config";
 
 const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
@@ -22,6 +22,13 @@ const code = new CustomBodyValidator("code").string().length(6, 6).getValidator(
 
 export const registerValidator = createValidatorMiddleware([firstName, lastName, email, password]);
 export const loginValidator = createValidatorMiddleware([email, password]);
+export const addManagerValidator = createValidatorMiddleware([
+  firstName,
+  lastName,
+  email,
+  password,
+  id
+]);
 export const fillDetailsValidator = createValidatorMiddleware([
   universityName,
   year,

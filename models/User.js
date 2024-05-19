@@ -30,6 +30,11 @@ const UserSchema = mongoose.Schema({
     required: true,
     default: UserRoles.USER
   },
+  dormId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Dorm",
+    required: false
+  },
   universityName: {
     type: String,
     required: false,

@@ -1,7 +1,9 @@
+import Dorm from "../models/Dorm.js";
 import User from "../models/User.js";
 import { hashPassword, isValidPassword } from "../services/bcrypt.js";
 import { createToken } from "../services/jwt.js";
-import { sendActivationCode } from "../services/nodemailer.js";
+import { sendActivationCode, sendManagerCredentials } from "../services/nodemailer.js";
+import { UserRoles } from "../utils/enums.js";
 
 export const register = async (req, res) => {
   try {
@@ -66,6 +68,36 @@ export const activate = async (req, res) => {
     );
 
     res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const addNewManager = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { firstName, lastName, email, password } = req.body;
+
+    const emailAlreadyExists = await User.findOne({ email });
+    if (emailAlreadyExists) {
+      return res.status(409).json({ message: "Email is already in use" });
+    }
+
+    const hashedPassword = await hashPassword(password);
+    const manager = await new User({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      dormId: id,
+      isActivated: true,
+      role: UserRoles.MANAGER
+    }).save();
+
+    const dorm = await Dorm.findByIdAndUpdate(id, { $addToSet: { managers: manager._id } });
+    await sendManagerCredentials(email, password, dorm.name);
+
+    res.status(201).json(manager);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

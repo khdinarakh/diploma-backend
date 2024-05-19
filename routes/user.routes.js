@@ -12,7 +12,7 @@ import { fillDetailsValidator, updateUserValidator } from "../validators/user.va
 
 const router = Router();
 
-router.get("/", authUser, getAllUsers);
+router.get("/", authUser, checkIsAdmin, getAllUsers);
 router.get("/me", authUser, getMe);
 router.patch("/fill", authUser, fillDetailsValidator, fillUserDetails);
 router.patch("/", authUser, updateUserValidator, updateMyAccount);

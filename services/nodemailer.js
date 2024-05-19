@@ -25,3 +25,21 @@ export const sendActivationCode = async (code, email) => {
     console.log(error);
   }
 };
+
+export const sendManagerCredentials = async (email, password, universityName) => {
+  try {
+    const mailOptions = {
+      from: NODEMAILER_MAIL,
+      to: email,
+      subject: "Manager Credentials",
+      html: `<div>
+        <h2>University name: <b>${universityName}</b></h2>
+        <h2>Email: <b>${email}</b></h2>
+        <h2>Password: <b>${password}</b></h2>
+      </div>`
+    };
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.log(error);
+  }
+};

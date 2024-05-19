@@ -67,6 +67,12 @@ const DormSchema = new mongoose.Schema(
       type: [String],
       required: true
     },
+    managers: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
+      required: true,
+      default: []
+    },
     reviews: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Review",
