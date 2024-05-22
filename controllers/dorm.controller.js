@@ -13,10 +13,18 @@ export const createDorm = async (req, res) => {
       price,
       size,
       capacity,
+      city,
       location,
       extras,
+      isHostel,
+      hasTelevision,
       hasWiFi,
-      hasMeal
+      hasWasher,
+      hasBalcony,
+      hasCleaner,
+      hasRadio,
+      hasLift,
+      hasDailyCleaner
     } = req.body;
     const previewImageUrl = await uploadFile(req.files.preview[0], "dorms");
     const imageUrls = await uploadFiles(req.files.images, "dorms");
@@ -31,9 +39,19 @@ export const createDorm = async (req, res) => {
       size: +size,
       capacity: +capacity,
       extras: extras.split(";"),
+      city,
       location,
-      hasWiFi: ensureBoolean(hasWiFi),
-      hasMeal: ensureBoolean(hasMeal),
+      isHostel: ensureBoolean(isHostel),
+      amenties: {
+        hasTelevision: ensureBoolean(hasTelevision),
+        hasWifi: ensureBoolean(hasWiFi),
+        hasWasher: ensureBoolean(hasWasher),
+        hasBalcony: ensureBoolean(hasBalcony),
+        hasCleaner: ensureBoolean(hasCleaner),
+        hasRadio: ensureBoolean(hasRadio),
+        hasLift: ensureBoolean(hasLift),
+        hasDailyCleaner: ensureBoolean(hasDailyCleaner)
+      },
       previewImageUrl,
       imageUrls
     }).save();
@@ -56,10 +74,18 @@ export const updateDorm = async (req, res) => {
       price,
       size,
       capacity,
+      city,
       location,
       extras,
+      isHostel,
+      hasTelevision,
       hasWiFi,
-      hasMeal
+      hasWasher,
+      hasBalcony,
+      hasCleaner,
+      hasRadio,
+      hasLift,
+      hasDailyCleaner
     } = req.body;
 
     const dorm = await Dorm.findByIdAndUpdate(
@@ -74,12 +100,23 @@ export const updateDorm = async (req, res) => {
         size: +size,
         capacity: +capacity,
         extras: typeof extras === "string" ? extras.split(";") : extras,
+        city,
         location,
-        hasWiFi: ensureBoolean(hasWiFi),
-        hasMeal: ensureBoolean(hasMeal)
+        isHostel: ensureBoolean(isHostel),
+        amenties: {
+          hasTelevision: ensureBoolean(hasTelevision),
+          hasWifi: ensureBoolean(hasWiFi),
+          hasWasher: ensureBoolean(hasWasher),
+          hasBalcony: ensureBoolean(hasBalcony),
+          hasCleaner: ensureBoolean(hasCleaner),
+          hasRadio: ensureBoolean(hasRadio),
+          hasLift: ensureBoolean(hasLift),
+          hasDailyCleaner: ensureBoolean(hasDailyCleaner)
+        }
       },
       { new: true }
     );
+
     if (!dorm) {
       return res.status(404).json({ message: "Dorm not found" });
     }
@@ -216,10 +253,23 @@ export const getComparedDorms = async (req, res) => {
     const { dormsIds } = req.body;
     const dorms = await Dorm.find({ _id: { $in: dormsIds } });
     if (!dorms) {
-      return res.status(404).json({ message: "Dorm not found" });
+      return res.status(404).json({ message: "Dorms not found" });
     }
 
     res.json(dorms);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getUniqueCities = async (req, res) => {
+  try {
+    const cities = await Dorm.distinct("city");
+    if (!cities) {
+      return res.status(404).json({ message: "Cities not found" });
+    }
+
+    res.json(cities);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -1,5 +1,51 @@
 import mongoose from "mongoose";
 
+const AmentiesSchema = new mongoose.Schema(
+  {
+    hasTelevision: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    hasWiFi: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    hasWasher: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    hasBalcony: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    hasCleaner: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    hasRadio: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    hasLift: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    hasDailyCleaner: {
+      type: Boolean,
+      required: true,
+      default: false
+    }
+  },
+  { _id: false, timestamps: false }
+);
+
 const DormSchema = new mongoose.Schema(
   {
     slug: {
@@ -39,6 +85,11 @@ const DormSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
+    city: {
+      type: String,
+      required: true,
+      trim: true
+    },
     location: {
       type: String,
       required: true,
@@ -48,15 +99,10 @@ const DormSchema = new mongoose.Schema(
       type: [String],
       required: true
     },
-    hasWiFi: {
+    isHostel: {
       type: Boolean,
       required: true,
-      default: true
-    },
-    hasMeal: {
-      type: Boolean,
-      required: true,
-      default: true
+      default: false
     },
     previewImageUrl: {
       type: String,
@@ -78,6 +124,10 @@ const DormSchema = new mongoose.Schema(
       ref: "Review",
       required: true,
       default: []
+    },
+    amenties: {
+      type: AmentiesSchema,
+      required: true
     }
   },
   { timestamps: true }
