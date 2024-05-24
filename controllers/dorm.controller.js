@@ -26,6 +26,7 @@ export const createDorm = async (req, res) => {
       hasLift,
       hasDailyCleaner
     } = req.body;
+    console.log(req.files);
     const previewImageUrl = await uploadFile(req.files.preview[0], "dorms");
     const imageUrls = await uploadFiles(req.files.images, "dorms");
 
@@ -88,8 +89,8 @@ export const updateDorm = async (req, res) => {
       hasDailyCleaner
     } = req.body;
 
-    const dorm = await Dorm.findByIdAndUpdate(
-      id,
+    const dorm = await Dorm.updateOne(
+      { slug: id },
       {
         slug,
         name,
@@ -113,8 +114,7 @@ export const updateDorm = async (req, res) => {
           hasLift: ensureBoolean(hasLift),
           hasDailyCleaner: ensureBoolean(hasDailyCleaner)
         }
-      },
-      { new: true }
+      }
     );
 
     if (!dorm) {

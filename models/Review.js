@@ -30,21 +30,24 @@ const RateSchema = new mongoose.Schema(
   { _id: false, timestamps: false }
 );
 
-const ReviewSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true
+const ReviewSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+    rate: {
+      type: RateSchema,
+      required: true
+    },
+    comment: {
+      type: String,
+      required: false,
+      trim: true
+    }
   },
-  rate: {
-    type: RateSchema,
-    required: true
-  },
-  comment: {
-    type: String,
-    required: false,
-    trim: true
-  }
-});
+  { timestamps: true }
+);
 
 export default mongoose.model("Review", ReviewSchema);

@@ -24,8 +24,8 @@ router.post(
 router.patch("/:id", authUser, checkIsAdmin, updateDormValidator, updateDorm);
 router.delete("/:id", authUser, checkIsAdmin, deleteDorm);
 router.get("/", getAllDorms);
-router.get("/:slug", getDormBySlug);
 router.get("/cities", getUniqueCities);
+router.get("/:slug", getDormBySlug);
 router.post("/compare", getComparedDorms);
 
 export default router;

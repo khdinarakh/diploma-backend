@@ -9,5 +9,5 @@ const router = Router();
 router.post("/:id", authUser, createReviewValidator, createReview);
 router.patch("/:id", authUser, updateReviewValidator, updateReview);
 router.delete("/:id", authUser, checkIdParamValidator, deleteReview);
-
+  
 export default router;
