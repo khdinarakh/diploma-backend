@@ -70,7 +70,7 @@ export const getChatById = async (req, res) => {
       { arrayFilters: [{ "elem.isManager": !updateFilter["messages.isManager"] }] }
     );
 
-    const chat = await Chat.findById(chatId);
+    const chat = await Chat.findById(chatId).populate("dormId").populate("userId");
 
     res.json(chat);
   } catch (error) {
@@ -81,7 +81,7 @@ export const getChatById = async (req, res) => {
 export const getAllChatsOfUser = async (req, res) => {
   try {
     const { userId } = req.params;
-    const chats = await Chat.find({ userId });
+    const chats = await Chat.find({ userId }).populate("dormId");
     if (!chats) {
       return res.status(404).json({ message: "Chats not found" });
     }
@@ -100,7 +100,7 @@ export const getAllChatsOfUser = async (req, res) => {
 export const getAllChatsOfManager = async (req, res) => {
   try {
     const { dormId } = req.params;
-    const chats = await Chat.find({ dormId });
+    const chats = await Chat.find({ dormId }).populate("userId");
     if (!chats) {
       return res.status(404).json({ message: "Chats not found" });
     }

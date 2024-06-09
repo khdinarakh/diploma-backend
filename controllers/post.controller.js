@@ -12,6 +12,17 @@ export const createNewPost = async (req, res) => {
   }
 };
 
+export const editPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, content } = req.body;
+    const post = await Post.findByIdAndUpdate(id, { $set: { title, content } }, { new: true });
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find().populate("userId");
@@ -34,6 +45,19 @@ export const getPostById = async (req, res) => {
     }
 
     res.json(post);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Post.findByIdAndDelete(id);
+
+    res.json({
+      message: "Post have deleted"
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -26,7 +26,6 @@ export const createDorm = async (req, res) => {
       hasLift,
       hasDailyCleaner
     } = req.body;
-    console.log(req.files);
     const previewImageUrl = await uploadFile(req.files.preview[0], "dorms");
     const imageUrls = await uploadFiles(req.files.images, "dorms");
 
@@ -211,10 +210,12 @@ export const getAllDorms = async (req, res) => {
 export const getDormBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
-    const dorm = await Dorm.findOne({ slug }).populate({
-      path: "reviews",
-      populate: { path: "userId" }
-    });
+    const dorm = await Dorm.findOne({ slug })
+      .populate({
+        path: "reviews",
+        populate: { path: "userId" }
+      })
+      .populate({ path: "managers" });
     if (!dorm) {
       return res.status(404).json({ message: "Dorm not found" });
     }
